@@ -16,7 +16,7 @@ The value or dividend of the stocks are converted to a common currency to enable
 3. Usage:
 
 Modify input file: 
-- Stock symbol
+- Stock symbol - find it on Yahoo Finance
 - No of shares held 
 - Dividend per share annually
 
