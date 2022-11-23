@@ -2,7 +2,7 @@
 
     To visually represent portfolio exposure of stocks with PI charts
 
-    This will enable rebalancing or diversification if uncomfortable with exposure to certain stocks or industry in terms of prices or dividend
+    This will enable rebalancing or diversification if uncomfortable with exposure to certain stocks or industry in terms of investment value or annual dividend
 
 
 
