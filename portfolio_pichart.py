@@ -9,9 +9,9 @@ import argparse
 local_currency = "SGD"
 local_c_string = "SGD Dividend"
 exchanges_list = ['LSE','NMS','NYQ','SES','HKG']
-
+currency_list =['GBP','HKD','USD']
 def get_stock_info (stock_name,spec_info = ''):
-    print(stock_name)
+    # print(stock_name)
     stock_data = yf.Ticker(stock_name)
     # print(stock_data.info)
     return stock_data.info[spec_info]
@@ -63,7 +63,6 @@ def convert_local_value(exchange,total):
         sgd_value=c.get_rate('HKD', local_currency)*total
     else:
         sgd_value=c.get_rate('USD', local_currency)*total
-        print(f'{exchange} USD : {total}')
     
     print(f'{exchange} {local_currency} : {sgd_value}')
     return sgd_value
@@ -78,11 +77,8 @@ def exchange_total_value(output_df,exchange):
 # add values of all exhcnage for total value of all 
 def sum_exchange_value(output_df):
     tv = 0 
-    tv = exchange_total_value(output_df,exchanges_list[0])
-    tv += exchange_total_value(output_df,exchanges_list[1])
-    tv += exchange_total_value(output_df,exchanges_list[2])
-    tv += exchange_total_value(output_df,exchanges_list[3])
-    tv += exchange_total_value(output_df,exchanges_list[4])
+    for exchange in exchanges_list:
+        tv += exchange_total_value(output_df,exchange)
     print(f'All Exchange {local_currency} : {tv}')
 
 def argument_parsing():
@@ -99,10 +95,20 @@ def argument_parsing():
         output_df = csv_file_content(data)
     elif args.dataframe:
         output_df = pd.read_pickle(args.filename)
+    save_to_file(output_df)
+    return output_df
+
+def output_filtering(output_df):
+    # drop dividends less than 0.01
+    output_df.drop(output_df[output_df[local_c_string]<=0.01].index,inplace=True)
+    # sort dividends by size 
+    output_df = output_df.sort_values(by=[local_c_string],ascending=False)
+    output_df = output_df.loc[(output_df[local_c_string]>0)]
     return output_df
 
 def matplotlib_pi_chart(output_df):
     # for plotting of matplotplib graph 
+    output_df = output_filtering(output_df)
     fig, ( ax1) = plt.subplots(1)
     dividend_df = output_df[local_c_string]
     print(dividend_df.sum())
@@ -119,30 +125,22 @@ def save_to_file(output_df):
     output_df.to_csv("../output_dataframe.csv")
 
 
-def main(argv):
+def main():
     # argv includes name of the script 
     # print ('Number of arguments:', len(sys.argv), 'arguments.')
     # print ('Argument List:', str(sys.argv))
     output_df = argument_parsing()
     pd.set_option("display.max_columns", None)
-    # drop anything with zero dividends
-    output_df.drop(output_df[output_df[local_c_string]<=0.01].index,inplace=True)
-    # sort dividends by size 
-    output_df = output_df.sort_values(by=[local_c_string],ascending=False)
-    
-    output_df2 = output_df.loc[(output_df[local_c_string]>0)]
     
     #save to file 
-    save_to_file(output_df)
-
     # show all exchange values
     sum_exchange_value(output_df)
 
     del output_df['Stock Price']
     print(output_df.iloc[: ,1:])
-    matplotlib_pi_chart(output_df2)
+    matplotlib_pi_chart(output_df)
 
 
 if __name__ == "__main__":
-   main(sys.argv[1:])
+   main()
 
