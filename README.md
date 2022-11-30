@@ -15,14 +15,19 @@
 
 3. Usage:
 
-    Modify input file: 
+    Modify input file ( columns ): 
     - Stock symbol - find it on Yahoo Finance
     - No of shares held 
     - Dividend per share annually
 
     ./portfolio_pichart.py (input file)
 
-    ./portfolio_pichart.py example.csv 
+    When using CSV example 
+    ./portfolio_pichart.py -i example.csv
+
+    When Using dataframe.pkl
+    ./portfolio_pichart.py -df dataframe.pkly
+
 
     Should get the same image as example.png
 
@@ -32,3 +37,4 @@
     2. forex-python
     3. pandas
     4. matplotlib  
+    5. argparse
