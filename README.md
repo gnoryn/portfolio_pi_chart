@@ -22,11 +22,13 @@
 
     ./portfolio_pichart.py (input file)
 
-    When using CSV example 
-    ./portfolio_pichart.py -i example.csv
+    When using CSV example :
 
-    When Using dataframe.pkl
-    ./portfolio_pichart.py -df dataframe.pkly
+        ./portfolio_pichart.py -i example.csv
+
+    When Using dataframe.pkl :
+
+        ./portfolio_pichart.py -df dataframe.pkl
 
 
     Should get the same image as example.png
